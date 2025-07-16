@@ -106,11 +106,7 @@ class AuthService {
       await user.save();
 
       // Generate JWT
-      const token = jwt.sign(
-        { userId: user._id, mobile: user.mobile },
-        JWT_SECRET,
-        { expiresIn: "7d" }
-      );
+      const token = createToken(user._id);
 
       // Clean up OTP
       await OTPDao.deleteOTPByMobile(mobile);

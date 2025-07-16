@@ -44,7 +44,7 @@ const authController = require("../controllers/auth.controller");
  *       500:
  *         description: Internal server error
  */
-router.post("/auth/request-otp", async (req, res) => {
+router.post("/request-otp", async (req, res) => {
   try {
     const result = await authController.requestOTP(req, res);
     return result;
@@ -108,7 +108,7 @@ router.post("/auth/request-otp", async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.post("/auth/verify-otp", async (req, res) => {
+router.post("/verify-otp", async (req, res) => {
   try {
     const result = await authController.verifyOTP(req, res);
     return result;
