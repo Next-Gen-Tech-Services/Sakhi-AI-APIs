@@ -9,6 +9,7 @@ const {
   randomString,
 } = require("../utils/helpers/common.util");
 const { sendMail } = require("../utils/helpers/email.util");
+const { MOBILE } = require("../utils/constants/via.constant");
 
 class AuthService {
   async requestOTPService(req, res) {
@@ -31,8 +32,7 @@ class AuthService {
         // Create new user if not found
         const userData = {
           mobile,
-          via: "mobile",
-          isVerified: false, // I think we don't need this prop
+          via: MOBILE,
         };
         userResult = await userDao.createUser(userData);
       }

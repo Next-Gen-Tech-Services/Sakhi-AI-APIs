@@ -33,6 +33,35 @@ class UserService {
             });
         }
     }
+    async getProfileService(req, res) {
+        try {
+            const userId = req.userId;
+
+            if (!userId) {
+                return res.status(401).json({
+                    message: "Unauthorized: User ID not found in token",
+                    status: "failed",
+                    data: null,
+                    code: 401,
+                });
+            }
+
+            // Step 3: Get user from database
+            const result = await userDao.getUserById(userId);
+
+            // Step 4: Send back DAO's response
+            return res.status(result.code).json(result);
+
+        } catch (error) {
+            log.error("Error from [USER SERVICE - getProfile]: ", error);
+            return res.status(500).json({
+                message: "Internal Server Error",
+                status: "failed",
+                data: null,
+                code: 500,
+            });
+        }
+    }
 }
 
 module.exports = new UserService();

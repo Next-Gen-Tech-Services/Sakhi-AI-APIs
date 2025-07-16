@@ -10,6 +10,14 @@ class UserController {
         }
     }
 
+    async getProfile(req, res) {
+        try {
+            const result = await userService.getProfileService(req, res);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = new UserController();

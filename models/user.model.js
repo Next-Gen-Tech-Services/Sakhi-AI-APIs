@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 
+const { MALE, FEMALE, OTHER } = require("../utils/constants/gender.constant");
+const { MOBILE, EMAIL, GOOGLE } = require("../utils/constants/via.constant");
+
+
 const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
       trim: true,
+      default: ""
     },
     mobile: {
       type: String,
@@ -14,38 +19,24 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: false,
+      default: ""
     },
-    password: {
+    gender: {
       type: String,
-      required: false,
-    },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    isProfile: {
-      type: Boolean,
-      default: false,
+      enum: [MALE, FEMALE, OTHER],
+      default: MALE
     },
     via: {
       type: String,
       required: true,
-      enum: ["mobile", "email", "google"],
+      enum: [MOBILE, EMAIL, GOOGLE], // for future proof
     },
-    emailToken: {
-      type: String,
-      required: false,
-    },
-    resetToken: {
-      type: String,
+    dob: {
+      type: Date,
       required: false,
     },
   },
   { timestamps: true }
 );
-
-module.exports = mongoose.model("User", userSchema);
-
-
 
 module.exports = mongoose.model("User", userSchema);
