@@ -109,31 +109,31 @@ router.get("/getAllConversation", jwt.authenticateJWT, async (req, res) => {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User found
+ *                   example: "User found"
  *                 status:
  *                   type: string
- *                   example: success
+ *                   example: "success"
  *                 data:
  *                   type: object
  *                   properties:
  *                     _id:
  *                       type: string
- *                       example: 64ab2349f4d70c2b6a07df91
+ *                       example: "64ab2349f4d70c2b6a07df91"
  *                     name:
  *                       type: string
- *                       example: Aakash
+ *                       example: "Aakash"
  *                     email:
  *                       type: string
- *                       example: aakash@example.com
+ *                       example: "aakash@example.com"
  *                     mobile:
  *                       type: string
- *                       example: '9876543210'
+ *                       example: "9876543210"
  *                     gender:
  *                       type: string
- *                       example: MALE
+ *                       example: "MALE"
  *                     userId:
  *                       type: string
- *                       example: User_0012
+ *                       example: "User_0012"
  *                     createdAt:
  *                       type: string
  *                       format: date-time
@@ -152,10 +152,10 @@ router.get("/getAllConversation", jwt.authenticateJWT, async (req, res) => {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Unauthorized: User ID not found in token
+ *                   example: "Unauthorized: User ID not found in token"
  *                 status:
  *                   type: string
- *                   example: failed
+ *                   example: "failed"
  *                 data:
  *                   type: string
  *                   nullable: true
@@ -172,10 +172,10 @@ router.get("/getAllConversation", jwt.authenticateJWT, async (req, res) => {
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Internal Server Error
+ *                   example: "Internal Server Error"
  *                 status:
  *                   type: string
- *                   example: failed
+ *                   example: "failed"
  *                 data:
  *                   type: string
  *                   nullable: true
