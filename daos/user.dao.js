@@ -5,7 +5,7 @@ const { hashItem } = require("../utils/helpers/bcrypt.util");
 class UserDao {
   async getUserById(id) {
     try {
-      const user = await User.findOne({ userId: id });
+      const user = await User.findOne({ _id: id });
       if (!user) {
         return {
           message: "User not found",

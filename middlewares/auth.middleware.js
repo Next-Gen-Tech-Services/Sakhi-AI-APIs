@@ -10,6 +10,10 @@ class JWT {
         const payload = verifyToken(authHeader.split(" ")[1]);
         req.userId = payload.userId;
         const user = await userDao.getUserById(req.userId);
+        // console.log("===============================================");
+        // console.log(req.userId);
+        // console.log(user);
+        // console.log("===============================================");
         if (user && user.data && user.code !== 201) {
           log.info("Authentication token verified");
           next();
