@@ -1,6 +1,13 @@
 const router = require("express").Router();
-const jwt = require("../middlewares/auth.middleware");
+const messageRouter = require("./message.routes.js");
 const userController = require("../controllers/user.controller.js");
+const jwt = require("../middlewares/auth.middleware");
+
+
+// this is because messages belongs to user
+// so ideally all routes /api/user/messsage/....
+router.use("/message", messageRouter);
+
 
 /**
  * @swagger
