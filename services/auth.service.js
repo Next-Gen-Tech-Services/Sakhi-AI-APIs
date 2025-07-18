@@ -27,7 +27,6 @@ class AuthService {
 
       // Check if user exists
       let userResult = await userDao.getUserByMobile(mobile);
-
       if (!userResult.data) {
         // Create new user if not found
         const userData = {
