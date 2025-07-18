@@ -83,15 +83,29 @@ class UserService {
             if (email !== undefined) {
                 const normalizedEmail = email.trim().toLowerCase();
 
-                // Check if email is already taken by another user
-                const existingUserResult = await userDao.getUserByEmail(normalizedEmail);
-                if (existingUserResult?.data && existingUserResult.data._id.toString() !== userId) {
-                    return res.status(409).json({
-                        message: "Email already in use",
-                        status: "fail",
-                        code: 409,
-                        data: null,
-                    });
+                if (normalizedEmail !== "") {
+                    // Check if email is already taken by another user
+                    const existingUserResult = await userDao.getUserByEmail(normalizedEmail);
+
+                    if (existingUserResult?.data && existingUserResult.data._id.toString() !== userId) {
+                        return res.status(409).json({
+                            message: "Email already in use",
+                            status: "fail",
+                            code: 409,
+                            data: null,
+                        });
+                    }
+                } else {
+                    // If email is empty string, allow only if no other user exists with email ""
+                    const existingUserResult = await userDao.getUserByEmail("");
+                    if (existingUserResult?.data && existingUserResult.data._id.toString() !== userId) {
+                        return res.status(409).json({
+                            message: "Email already in use",
+                            status: "fail",
+                            code: 409,
+                            data: null,
+                        });
+                    }
                 }
 
                 updateData.email = normalizedEmail;
