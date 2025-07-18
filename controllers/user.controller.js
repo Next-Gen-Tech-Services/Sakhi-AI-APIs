@@ -18,6 +18,15 @@ class UserController {
             throw error;
         }
     }
+
+    async updateProfile(req, res) {
+        try {
+            const result = await userService.updateProfileService(req, res);
+            return result;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = new UserController();

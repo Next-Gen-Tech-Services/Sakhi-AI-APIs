@@ -162,6 +162,19 @@ class UserDao {
       throw error;
     }
   }
+  async updateUserById(userId, updateData) {
+    try {
+      const updated = await User.findByIdAndUpdate(
+        userId,
+        { $set: updateData },
+        { new: true }
+      );
+      return updated;
+    } catch (err) {
+      console.error("DAO: Failed to update user", err);
+      return null;
+    }
+  }
 }
 
 module.exports = new UserDao();

@@ -192,7 +192,7 @@ router.get("/getAllConversation", jwt.authenticateJWT, async (req, res) => {
  *                   example: 500
  */
 
-router.get("/getProfile", jwt.authenticateJWT, async (req, res) => {
+router.get("/get-profile", jwt.authenticateJWT, async (req, res) => {
     try {
         const result = await userController.getProfile(req, res);
         return result;
@@ -201,6 +201,106 @@ router.get("/getProfile", jwt.authenticateJWT, async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+
+/**
+ * @swagger
+ * /api/user/update-profile:
+ *   put:
+ *     summary: Update user profile
+ *     description: Allows an authenticated user to update their profile information. If the provided email already exists for another account, it returns a conflict error.
+ *     tags:
+ *       - User
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Gautam Updahyay
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: john@example.com
+ *               gender:
+ *                 type: string
+ *                 enum: [male, female, other]
+ *                 example: male
+ *               dob:
+ *                 type: string
+ *                 format: date
+ *                 example: 2000-04-01
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: Profile updated successfully
+ *                 status: success
+ *                 code: 200
+ *       401:
+ *         description: Unauthorized - JWT token missing or invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: Unauthorized
+ *                 status: fail
+ *                 code: 401
+ *                 data: null
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: User not found
+ *                 status: fail
+ *                 code: 404
+ *                 data: null
+ *       409:
+ *         description: Email already in use
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: Email already in use
+ *                 status: fail
+ *                 code: 409
+ *                 data: null
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               example:
+ *                 message: Internal server error
+ *                 status: error
+ *                 code: 500
+ *                 data: null
+ */
+
+router.put("/update-profile", jwt.authenticateJWT, async (req, res) => {
+    try {
+        const result = await userController.updateProfile(req, res);
+        return result;
+    } catch (error) {
+        log.error("Internal Server Error: ", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+})
 
 
 module.exports = router;

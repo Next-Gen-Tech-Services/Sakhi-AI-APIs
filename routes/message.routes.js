@@ -31,9 +31,7 @@ const messageController = require("../controllers/message.controller");
  *       - thank you → You're welcome!
  *       - lol → 😂
  *       - bye → Goodbye!
- *       ...and 80+ more
  *
- *       🔸 To see all supported messages, call: `GET /api/user/messages-dump`
  *     tags:
  *       - Message
  *     requestBody:
@@ -68,8 +66,7 @@ const messageController = require("../controllers/message.controller");
  *                   message: Hello
  */
 
-
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const result = await messageController.getMessage(req, res);
         return result;
