@@ -11,6 +11,9 @@ const {
 const { sendMail } = require("../utils/helpers/email.util");
 
 const Conversation = require("../models/conversation.model");
+const { MALE, FEMALE, OTHER } = require("../utils/constants/gender.constant");
+
+const allowedGenders = [MALE, FEMALE, OTHER];
 
 class UserService {
     async getAllConversationService(req, res) {
@@ -65,7 +68,7 @@ class UserService {
     async updateProfileService(req, res) {
         try {
             const userId = req.userId;
-            const { name, email, gender, dob } = req.body;
+            const { name, email, gender } = req.body;
 
             if (!userId) {
                 return res.status(401).json({
@@ -84,9 +87,16 @@ class UserService {
                 const normalizedEmail = email.trim().toLowerCase();
 
                 if (normalizedEmail !== "") {
-                    // Check if email is already taken by another user
-                    const existingUserResult = await userDao.getUserByEmail(normalizedEmail);
+                    if (!validateEmail(normalizedEmail)) {
+                        return res.status(400).json({
+                            message: "Invalid email format",
+                            status: "fail",
+                            code: 400,
+                            data: null,
+                        });
+                    }
 
+                    const existingUserResult = await userDao.getUserByEmail(normalizedEmail);
                     if (existingUserResult?.data && existingUserResult.data._id.toString() !== userId) {
                         return res.status(409).json({
                             message: "Email already in use",
@@ -96,7 +106,7 @@ class UserService {
                         });
                     }
                 } else {
-                    // If email is empty string, allow only if no other user exists with email ""
+                    // ✅ Allow empty email only if no other user has it
                     const existingUserResult = await userDao.getUserByEmail("");
                     if (existingUserResult?.data && existingUserResult.data._id.toString() !== userId) {
                         return res.status(409).json({
@@ -111,8 +121,15 @@ class UserService {
                 updateData.email = normalizedEmail;
             }
 
-            if (gender !== undefined) updateData.gender = gender;
-            if (dob !== undefined) updateData.dob = new Date(dob);
+            if (gender !== undefined) {
+                if (!allowedGenders.includes(gender)) {
+                    return res.status(400).json({
+                        status: false,
+                        message: "Invalid gender value. Allowed values are: male, female, other.",
+                    });
+                }
+                updateData.gender = gender;
+            }
 
             const updatedUser = await userDao.updateUserById(userId, updateData);
 

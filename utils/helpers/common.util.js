@@ -35,6 +35,7 @@ const createSlug = (title) => {
   key = key.replace(/ /g, "-");
   return key;
 };
+
 module.exports = {
   removeNullUndefined,
   randomString,

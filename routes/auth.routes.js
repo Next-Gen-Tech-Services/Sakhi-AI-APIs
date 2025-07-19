@@ -119,7 +119,7 @@ router.post("/verify-otp", async (req, res) => {
 });
 
 
-//---------------------------------
+//--------------------------------- FOLLOWING CODE WILL REMOVE
 
 router.post("/register", async (req, res) => {
   try {
