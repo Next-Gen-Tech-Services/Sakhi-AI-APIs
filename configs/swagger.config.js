@@ -10,11 +10,21 @@ const options = {
         },
         servers: [
             {
-                url: "http://localhost:4000", // change if needed
+                url: "https://sakhi-ai-apis.onrender.com",
+                description: "Development server",
             },
         ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                },
+            },
+        },
     },
-    apis: ["./routes/*.js"], // update if your routes are elsewhere
+    apis: ["./routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsDoc(options);

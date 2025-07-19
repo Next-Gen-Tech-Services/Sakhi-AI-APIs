@@ -202,13 +202,22 @@ router.get("/get-profile", jwt.authenticateJWT, async (req, res) => {
     }
 });
 
-
 /**
  * @swagger
  * /api/user/update-profile:
  *   put:
- *     summary: Update user profile
- *     description: Allows an authenticated user to update their profile information. If the provided email already exists for another account, it returns a conflict error.
+ *     summary: Update the logged-in user's profile
+ *     description: |
+ *       Updates the profile of the authenticated user. Fields that can be updated include name, email, and gender.
+ *       
+ *       🔐 Requires JWT Authentication
+ *       
+ *       ⚠️ Validations:
+ *       - `email` must be a valid format if not empty.
+ *       - `email` must be unique.
+ *       - `gender` must be one of: `male`, `female`, `other`.
+ *       
+ *       If email is an empty string, it is only allowed if no other user has `""` as email.
  *     tags:
  *       - User
  *     security:
@@ -222,19 +231,14 @@ router.get("/get-profile", jwt.authenticateJWT, async (req, res) => {
  *             properties:
  *               name:
  *                 type: string
- *                 example: Gautam Updahyay
+ *                 example: John Doe
  *               email:
  *                 type: string
- *                 format: email
- *                 example: john@example.com
+ *                 example: johndoe@example.com
  *               gender:
  *                 type: string
  *                 enum: [male, female, other]
  *                 example: male
- *               dob:
- *                 type: string
- *                 format: date
- *                 example: 2000-04-01
  *     responses:
  *       200:
  *         description: Profile updated successfully
@@ -242,56 +246,24 @@ router.get("/get-profile", jwt.authenticateJWT, async (req, res) => {
  *           application/json:
  *             schema:
  *               type: object
- *               example:
- *                 message: Profile updated successfully
- *                 status: success
- *                 code: 200
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *                 code:
+ *                   type: integer
+ *       400:
+ *         description: Invalid input (e.g. invalid email or gender)
  *       401:
- *         description: Unauthorized - JWT token missing or invalid
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               example:
- *                 message: Unauthorized
- *                 status: fail
- *                 code: 401
- *                 data: null
+ *         description: Unauthorized (JWT missing or invalid)
  *       404:
  *         description: User not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               example:
- *                 message: User not found
- *                 status: fail
- *                 code: 404
- *                 data: null
  *       409:
  *         description: Email already in use
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               example:
- *                 message: Email already in use
- *                 status: fail
- *                 code: 409
- *                 data: null
  *       500:
  *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               example:
- *                 message: Internal server error
- *                 status: error
- *                 code: 500
- *                 data: null
  */
-
 router.put("/update-profile", jwt.authenticateJWT, async (req, res) => {
     try {
         const result = await userController.updateProfile(req, res);
