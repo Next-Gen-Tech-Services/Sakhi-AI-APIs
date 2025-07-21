@@ -162,6 +162,7 @@ class UserDao {
       throw error;
     }
   }
+
   async updateUserById(userId, updateData) {
     try {
       const updated = await User.findByIdAndUpdate(

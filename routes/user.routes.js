@@ -191,7 +191,6 @@ router.get("/getAllConversation", jwt.authenticateJWT, async (req, res) => {
  *                   type: integer
  *                   example: 500
  */
-
 router.get("/get-profile", jwt.authenticateJWT, async (req, res) => {
     try {
         const result = await userController.getProfile(req, res);

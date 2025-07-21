@@ -1,13 +1,13 @@
 const router = require("express").Router();
 const authController = require("../controllers/auth.controller");
 
-
 /**
  * @swagger
- * /api/auth/request-otp:
+ * /api/request-otp:
  *   post:
- *     summary: Request OTP for login/signup
- *     tags: [Auth]
+ *     summary: Request an OTP for login or registration via mobile number
+ *     tags:
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -19,6 +19,7 @@ const authController = require("../controllers/auth.controller");
  *             properties:
  *               mobile:
  *                 type: string
+ *                 description: User's mobile number (10-digit format)
  *                 example: "9876543210"
  *     responses:
  *       200:
@@ -30,19 +31,59 @@ const authController = require("../controllers/auth.controller");
  *               properties:
  *                 message:
  *                   type: string
+ *                   example: OTP sent successfully
  *                 status:
  *                   type: string
+ *                   example: success
  *                 data:
  *                   type: object
  *                   properties:
  *                     userId:
  *                       type: string
+ *                       example: User_101
  *                     mobile:
  *                       type: string
+ *                       example: "9876543210"
+ *                 code:
+ *                   type: integer
+ *                   example: 200
  *       400:
- *         description: Mobile number missing
+ *         description: Mobile number is missing in the request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Mobile number is required
+ *                 status:
+ *                   type: string
+ *                   example: failed
+ *                 data:
+ *                   type: string
+ *                   nullable: true
+ *                   example: null
+ *                 code:
+ *                   type: integer
+ *                   example: 400
  *       500:
- *         description: Internal server error
+ *         description: Internal server error or user creation failure
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ *                 status:
+ *                   type: string
+ *                   example: failed
+ *                 code:
+ *                   type: integer
+ *                   example: 500
+ *     security: []
  */
 router.post("/request-otp", async (req, res) => {
   try {

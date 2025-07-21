@@ -10,6 +10,11 @@ const {
 } = require("../utils/helpers/common.util");
 const { sendMail } = require("../utils/helpers/email.util");
 const { MOBILE } = require("../utils/constants/via.constant");
+const getNextSequenceValue = require("../utils/helpers/counter.util");
+const { ENGLISH } = require("../utils/constants/language.constant");
+const { FREE_TIER } = require("../utils/constants/tier.constant");
+
+
 
 class AuthService {
   async requestOTPService(req, res) {
@@ -25,30 +30,46 @@ class AuthService {
         });
       }
 
-      // Check if user exists
+      // 1. Check if user already exists
       let userResult = await userDao.getUserByMobile(mobile);
-      if (!userResult.data) {
-        // Create new user if not found
-        const userData = {
+
+      // 2. If not, create a new user with default values
+      if (!userResult?.data) {
+        const newUser = {
           mobile,
           via: MOBILE,
+          preferredLanguage: ENGLISH, // in future may be acc. to device language
+          tier: FREE_TIER,
+          age: 0,
         };
-        userResult = await userDao.createUser(userData);
+
+        userResult = await userDao.createUser(newUser);
+
+        if (!userResult?.data) {
+          return res.status(500).json({
+            message: "Failed to create user",
+            status: "failed",
+            data: null,
+            code: 500,
+          });
+        }
       }
 
-      const otp = "1234"; // Static mock OTP for now
+      // 3. Generate OTP (placeholder for now)
+      const otp = "1234";
 
-      // Delete previous OTPs
+      // 4. Delete any previous OTPs
       await OTPDao.deleteOTPByMobile(mobile);
 
-      // Save new OTP
+      // 5. Save new OTP
       await OTPDao.createOTP({ mobile, otp });
 
+      // 6. Return success response
       return res.status(200).json({
         message: "OTP sent successfully",
         status: "success",
         data: {
-          userId: userResult.data._id,
+          userId: userResult.data.userId,
           mobile: userResult.data.mobile,
         },
         code: 200,
