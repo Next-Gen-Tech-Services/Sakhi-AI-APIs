@@ -1,43 +1,25 @@
 const mongoose = require("mongoose");
 const { MALE, FEMALE, OTHER } = require("../utils/constants/gender.constant");
 const { MOBILE, EMAIL, GOOGLE } = require("../utils/constants/via.constant");
-const { ENGLISH,
-  HINDI,
-  BENGALI,
-  TAMIL,
-  TELUGU,
-  MARATHI,
-  GUJARATI,
-  KANNADA,
-  MALAYALAM,
-  ORIYA,
-  PUNJABI,
-  ASSAMESE,
-  MAITHILI,
-  URDU,
-  KASHMIRI,
-  KONKANI,
-  MANIPURI,
-  SANSKRIT,
-  SANTHALI,
-  DOGRI,
-  NEPALI,
-  BODO,
-  SINDHI } = require("../utils/constants/language.constant");
-const { FREE_TIER,
-  TIER_1,
-  TIER_2,
-  TIER_3,
-  PREMIUM_TIER } = require("../utils/constants/tier.constant");
+const {
+  ENGLISH, HINDI, BENGALI, TAMIL, TELUGU, MARATHI, GUJARATI,
+  KANNADA, MALAYALAM, ORIYA, PUNJABI, ASSAMESE, MAITHILI, URDU,
+  KASHMIRI, KONKANI, MANIPURI, SANSKRIT, SANTHALI, DOGRI, NEPALI, BODO, SINDHI
+} = require("../utils/constants/language.constant");
+const { FREE_TIER, PREMIUM_TIER } = require("../utils/constants/tier.constant");
 
-
-const userSchema = mongoose.Schema(
+const userDemographicSchema = mongoose.Schema(
   {
-    // userId we can use primary key with name or IN NOSQL _id + name?
+    _id: {
+      type: String, // UUID will be a string
+      trim: true,
+      required: true,
+    },
     userId: {
       type: String,
       trim: true,
-      required: true
+      required: true,
+      unique: true, // Ensures userId is unique
     },
     name: {
       type: String,
@@ -47,7 +29,7 @@ const userSchema = mongoose.Schema(
     mobile: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, // Unique index
     },
     email: {
       type: String,
@@ -62,7 +44,7 @@ const userSchema = mongoose.Schema(
     via: {
       type: String,
       required: true,
-      enum: [MOBILE, EMAIL, GOOGLE], // for future proof
+      enum: [MOBILE, EMAIL, GOOGLE],
     },
     preferredLanguage: {
       type: String,
@@ -75,16 +57,22 @@ const userSchema = mongoose.Schema(
     },
     tier: {
       type: String,
-      enum: [FREE_TIER, TIER_1, TIER_2, TIER_3, PREMIUM_TIER],
+      enum: [FREE_TIER, PREMIUM_TIER],
       default: FREE_TIER,
     },
     age: {
       type: Number,
       default: 0
     }
-    // Age, locale Tier, Preferred Language
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    collection: "user-demographics",
+  }
 );
 
-module.exports = mongoose.model("User", userSchema);
+// Add compound or additional indexes
+userDemographicSchema.index({ userId: 1 }, { unique: true }); // Optional if already declared above
+userDemographicSchema.index({ mobile: 1 }, { unique: true }); // Optional if already declared above
+
+module.exports = mongoose.model("user-demographics", userDemographicSchema);

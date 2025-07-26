@@ -1,4 +1,4 @@
-const userDao = require("../daos/user.dao");
+const userDemographicDao = require("../daos/user.demographic.dao");
 const { compareItems, hashItem } = require("../utils/helpers/bcrypt.util");
 const OTPDao = require("../daos/opt.dao");
 const log = require("../configs/logger.config");
@@ -31,7 +31,7 @@ class AuthService {
       }
 
       // 1. Check if user already exists
-      let userResult = await userDao.getUserByMobile(mobile);
+      let userResult = await userDemographicDao.getUserByMobile(mobile);
 
       // 2. If not, create a new user with default values
       if (!userResult?.data) {
@@ -43,7 +43,7 @@ class AuthService {
           age: 0,
         };
 
-        userResult = await userDao.createUser(newUser);
+        userResult = await userDemographicDao.createUser(newUser);
 
         if (!userResult?.data) {
           return res.status(500).json({
@@ -68,10 +68,6 @@ class AuthService {
       return res.status(200).json({
         message: "OTP sent successfully",
         status: "success",
-        data: {
-          userId: userResult.data.userId,
-          mobile: userResult.data.mobile,
-        },
         code: 200,
       });
     } catch (error) {
@@ -109,7 +105,7 @@ class AuthService {
       }
 
       // Fetch user
-      const userResult = await userDao.getUserByMobile(mobile);
+      const userResult = await userDemographicDao.getUserByMobile(mobile);
       if (!userResult.data) {
         return res.status(404).json({
           message: "User not found",
@@ -126,7 +122,7 @@ class AuthService {
       await user.save();
 
       // Generate JWT
-      const token = createToken(user._id);
+      const token = createToken(user.userId);
 
       // Clean up OTP
       await OTPDao.deleteOTPByMobile(mobile);
@@ -136,10 +132,9 @@ class AuthService {
         status: "success",
         token,
         user: {
-          _id: user._id,
-          mobile: user.mobile,
           name: user.name,
-          isVerified: user.isVerified,
+          mobile: user.mobile,
+          tier: user.tier
         },
         code: 200,
       });
@@ -175,7 +170,7 @@ class AuthService {
             code: 201,
           });
         }
-        const userExist = await userDao.getUserByEmail(email);
+        const userExist = await userDemographicDao.getUserByEmail(email);
         if (userExist.data == null) {
           const data = {
             email,
@@ -184,7 +179,7 @@ class AuthService {
             emailToken: await randomString(24),
           };
           const dataToUpdate = removeNullUndefined(data);
-          const userInfo = await userDao.createUser(dataToUpdate);
+          const userInfo = await userDemographicDao.createUser(dataToUpdate);
 
           if (userInfo.data !== null) {
             const token = createToken(userInfo.data.userId);
@@ -261,7 +256,7 @@ class AuthService {
           code: 201,
         });
       }
-      const user = await userDao.getUserByEmail(email);
+      const user = await userDemographicDao.getUserByEmail(email);
       if (user.data == null) {
         return res.status(400).json({
           message: "Account does not exist",
@@ -333,7 +328,7 @@ class AuthService {
           code: 201,
         });
       }
-      const user = await userDao.getUserByEmail(email);
+      const user = await userDemographicDao.getUserByEmail(email);
       if (user.data == null) {
         if (type === "google") {
           const data = {
@@ -344,7 +339,7 @@ class AuthService {
             isVerified: true,
           };
           const dataToUpdate = removeNullUndefined(data);
-          const userInfo = await userDao.createUser(dataToUpdate);
+          const userInfo = await userDemographicDao.createUser(dataToUpdate);
           const token = createToken(userInfo.data.userId);
           return res.status(200).json({
             status: "success",
@@ -422,7 +417,7 @@ class AuthService {
           code: 201,
         });
       }
-      const user = await userDao.getUserByEmail(email);
+      const user = await userDemographicDao.getUserByEmail(email);
       if (user.data != null) {
         if (user.data.via === "direct") {
           const data = {
@@ -430,7 +425,7 @@ class AuthService {
             email,
           };
           const dataToUpdate = removeNullUndefined(data);
-          const userInfo = await userDao.updateUser(dataToUpdate);
+          const userInfo = await userDemographicDao.updateUser(dataToUpdate);
           sendMail({
             email: email,
             subject: "Reset your account",
@@ -477,7 +472,7 @@ class AuthService {
         });
       }
 
-      const user = await userDao.getUserByResetToken(token);
+      const user = await userDemographicDao.getUserByResetToken(token);
       if (user.data != null) {
         if (user.data.via === "direct") {
           const data = {
@@ -485,7 +480,7 @@ class AuthService {
             password,
             resetToken: null,
           };
-          const userInfo = await userDao.updateUser(data);
+          const userInfo = await userDemographicDao.updateUser(data);
           return res.status(200).json({
             status: "success",
             code: 200,
