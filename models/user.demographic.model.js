@@ -15,6 +15,7 @@ const userDemographicSchema = mongoose.Schema(
       trim: true,
       required: true,
     },
+    // this will be deleted in future because M.L engineer change, So I have to check relevent APIs is it using userId or not
     userId: {
       type: String,
       trim: true,
