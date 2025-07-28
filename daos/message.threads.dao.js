@@ -58,7 +58,7 @@ class MessageThreadDao {
     // Get all threads for a userId
     async getThreadsByUserId(userId) {
         try {
-            const threads = await MessageThread.find({ userId });
+            const threads = await MessageThread.find({ userId }).sort({ createdAt: -1 });
             return {
                 message: "Threads fetched successfully",
                 status: "success",

@@ -34,7 +34,8 @@ class MessageHistoryDao {
     // Get messages by threadId
     async getMessagesByThreadId(threadId) {
         try {
-            const messages = await ChatHistory.find({ threadId }).sort({ timestamp: 1 });
+            // later on limit will be applied as application grows
+            const messages = await ChatHistory.find({ threadId }).sort({ timestamp: -1 });
 
             return {
                 message: "Messages fetched successfully",
