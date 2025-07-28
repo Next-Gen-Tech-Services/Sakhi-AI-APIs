@@ -6,7 +6,7 @@ class MessageThreadDao {
     // Create a new thread with initial messageCount = 0.
     async createThread(data) {
         try {
-            const threadId = `Thread-${uuidv4()}`;
+            const threadId = uuidv4();
             data.threadId = threadId;
             // Instead of a message array, we now maintain a counter.
             data.messageCount = 0;

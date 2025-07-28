@@ -60,7 +60,7 @@ class UserDemographicService {
             }
 
             // Destructure needed fields
-            const { name, email, gender, age, preferredLanguage } = result.data;
+            const { name, email, gender, age, preferredLanguage, tier, mobile } = result.data;
 
             // Send only filtered fields
             return res.status(200).json({
@@ -73,37 +73,9 @@ class UserDemographicService {
                         email,
                         gender,
                         age,
-                        preferredLanguage
-                    },
-                    genderOptions: {
-                        MALE,
-                        FEMALE,
-                        OTHER
-                    },
-                    preferredLanguageOptions: {
-                        ENGLISH,
-                        HINDI,
-                        BENGALI,
-                        TAMIL,
-                        TELUGU,
-                        MARATHI,
-                        GUJARATI,
-                        KANNADA,
-                        MALAYALAM,
-                        ORIYA,
-                        PUNJABI,
-                        ASSAMESE,
-                        MAITHILI,
-                        URDU,
-                        KASHMIRI,
-                        KONKANI,
-                        MANIPURI,
-                        SANSKRIT,
-                        SANTHALI,
-                        DOGRI,
-                        NEPALI,
-                        BODO,
-                        SINDHI
+                        preferredLanguage,
+                        tier,
+                        mobile
                     }
                 }
             });

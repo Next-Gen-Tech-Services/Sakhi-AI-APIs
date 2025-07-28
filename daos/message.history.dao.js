@@ -6,7 +6,7 @@ class MessageHistoryDao {
     // Save one message
     async createMessage({ userId, threadId, sender, message, timestamp }) {
         try {
-            const chatId = `Message-${uuidv4()}`;
+            const chatId = uuidv4();
 
             const chatMessage = new ChatHistory({
                 chatId,
