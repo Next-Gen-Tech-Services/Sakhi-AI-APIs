@@ -31,27 +31,7 @@ class MessageService {
             const trimmedMessage = message.trim();
 
             // ---------------------------------------------
-            // Step 1: Call chatbot API
-            const params = new URLSearchParams();
-            params.append("user_id", userId);
-            params.append("message", trimmedMessage);
-
-            let botResponse;
-            try {
-                const chatApiResp = await axios.post(CHAT_BOT_URL, params, {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                });
-
-                botResponse = chatApiResp.data?.output_message || "Sorry, no response from assistant.";
-            } catch (err) {
-                log.error("Error calling chatbot API:", err);
-                botResponse = "Sorry, something went wrong with assistant.";
-            }
-
-            // ---------------------------------------------
-            // Step 2: Handle thread
+            // Step 1: Handle thread
             let threadId = incomingThreadId?.trim();
             let createdThread = null;
 
@@ -86,7 +66,7 @@ class MessageService {
             }
 
             // ---------------------------------------------
-            // Step 3: Save user message
+            // Step 2: Save user message
             const userMsgResp = await messageHistoryDao.createMessage({
                 userId,
                 threadId,
@@ -106,6 +86,28 @@ class MessageService {
             }
 
             const userMessage = userMsgResp.data;
+
+            // ---------------------------------------------
+            // Step 3: Call chatbot API
+            const params = new URLSearchParams();
+            params.append("user_id", userId);
+            params.append("message", trimmedMessage);
+            params.append("thread_id", threadId);
+            params.append("message_id", userMessage._id.toString());
+
+            let botResponse;
+            try {
+                const chatApiResp = await axios.post(CHAT_BOT_URL, params, {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                });
+
+                botResponse = chatApiResp.data?.output_message || "Sorry, no response from assistant.";
+            } catch (err) {
+                log.error("Error calling chatbot API:", err);
+                botResponse = "Sorry, something went wrong with assistant.";
+            }
 
             // ---------------------------------------------
             // Step 4: Save assistant message
