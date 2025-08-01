@@ -134,7 +134,11 @@ class AuthService {
         user: {
           name: user.name,
           mobile: user.mobile,
-          tier: user.tier
+          tier: user.tier,
+          age: user.age,
+          email: user.email,
+          gender: user.gender,
+          preferredLanguage: user.preferredLanguage
         },
         code: 200,
       });

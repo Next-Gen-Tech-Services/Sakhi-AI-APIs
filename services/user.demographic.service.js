@@ -219,9 +219,11 @@ class UserDemographicService {
                 code: 200,
                 data: {
                     name: updatedUserResult?.data?.name,
+                    mobile: updatedUserResult?.data?.mobile,
+                    tier: updatedUserResult?.data?.tier,
+                    age: updatedUserResult?.data?.age,
                     email: updatedUserResult?.data?.email,
                     gender: updatedUserResult?.data?.gender,
-                    age: updatedUserResult?.data?.age,
                     preferredLanguage: updatedUserResult?.data?.preferredLanguage,
                 }
             });
