@@ -58,9 +58,10 @@ class MessageThreadDao {
     async getThreadsByUserId(userId) {
         try {
             // Fetch without sort to avoid Cosmos DB index error
-            const threads = await MessageThread.find({ userId });
+            // .lean() returns plain JS objects (no Mongoose doc overhead)
+            const threads = await MessageThread.find({ userId }).lean();
 
-            // Manual sort in memory
+            // Manual sort in memory (newest first)
             const sortedThreads = threads.sort(
                 (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
             );
@@ -76,6 +77,8 @@ class MessageThreadDao {
             throw error;
         }
     }
+
+
 
     /*
     As Suneel Sir directed, I'm apply In-memory sort operation in server because
