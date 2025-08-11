@@ -57,11 +57,13 @@ class MessageThreadDao {
 
     async getThreadsByUserId(userId) {
         try {
-            // Fetch without sort to avoid Cosmos DB index error
-            // .lean() returns plain JS objects (no Mongoose doc overhead)
-            const threads = await MessageThread.find({ userId }).lean();
+            // Force Cosmos to not sort by avoiding Mongoose query sort entirely
+            const threads = await MessageThread.find({ userId })
+                .lean() // plain JS objects
+                .readConcern('local') // keep it simple, avoid optimizations
+                .hint({ _id: 1 }); // force using the _id index only
 
-            // Manual sort in memory (newest first)
+            // Sort manually in JS
             const sortedThreads = threads.sort(
                 (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
             );
@@ -77,6 +79,7 @@ class MessageThreadDao {
             throw error;
         }
     }
+
 
 
 
