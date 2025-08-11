@@ -55,6 +55,34 @@ class MessageThreadDao {
         }
     }
 
+    async getThreadsByUserId(userId) {
+        try {
+            // Fetch without sort to avoid Cosmos DB index error
+            const threads = await MessageThread.find({ userId });
+
+            // Manual sort in memory
+            const sortedThreads = threads.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+
+            return {
+                message: "Threads fetched successfully",
+                status: "success",
+                data: sortedThreads,
+                code: 200,
+            };
+        } catch (error) {
+            log.error("DAO Error [getThreadsByUserId]: ", error);
+            throw error;
+        }
+    }
+
+    /*
+    As Suneel Sir directed, I'm apply In-memory sort operation in server because
+    as of now cosmos db owner(sampat Sir) nto avaialble to update index policy
+    if we update index policy and added createAt field in it below function will run smothly
+    */
+    /*
     // Get all threads for a userId
     async getThreadsByUserId(userId) {
         try {
@@ -70,7 +98,7 @@ class MessageThreadDao {
             throw error;
         }
     }
-
+    */
     async incrementMessageCount(threadId, incrementBy = 1) {
         try {
             const updated = await MessageThread.findOneAndUpdate(

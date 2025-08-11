@@ -49,6 +49,8 @@ class MessageThreadsService {
             });
         }
     }
+
+
     async getAllMessagesFromThreadsService(req, res) {
         try {
             const threadId = req.params.threadId;
