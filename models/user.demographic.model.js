@@ -40,7 +40,7 @@ const userDemographicSchema = mongoose.Schema(
     gender: {
       type: String,
       enum: [MALE, FEMALE, OTHER],
-      default: MALE
+      default: FEMALE
     },
     via: {
       type: String,
