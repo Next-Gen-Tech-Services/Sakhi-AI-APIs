@@ -90,6 +90,7 @@ class MessageService {
             // ---------------------------------------------
             // Step 3: Call chatbot API
             const params = new URLSearchParams();
+            // console.log("user_id : ", userId);
             params.append("user_id", userId);
             params.append("message", trimmedMessage);
             params.append("thread_id", threadId);

@@ -10,7 +10,7 @@ class MessageHistoryDao {
 
             const chatMessage = new ChatHistory({
                 chatId,
-                userId,
+                user_id: userId,
                 threadId,
                 sender,
                 message,
@@ -52,7 +52,7 @@ class MessageHistoryDao {
     // Get all messages by userId (across all threads)
     async getMessagesByUserId(userId) {
         try {
-            const messages = await ChatHistory.find({ userId }).sort({ timestamp: 1 });
+            const messages = await ChatHistory.find({ user_id: userId }).sort({ timestamp: 1 });
 
             return {
                 message: "Messages fetched successfully",

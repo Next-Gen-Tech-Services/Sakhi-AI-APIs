@@ -9,7 +9,7 @@ const chatHistorySchema = new mongoose.Schema(
             required: true,
             unique: true,
         },
-        userId: {
+        user_id: {
             type: String,
             required: true,
             index: true,

@@ -107,5 +107,4 @@ class MessageThreadsService {
     }
 }
 
-
 module.exports = new MessageThreadsService();
