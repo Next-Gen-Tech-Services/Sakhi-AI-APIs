@@ -1,6 +1,7 @@
 const MessageThread = require("../models/message.threads.model");
 const log = require("../configs/logger.config");
 const { v4: uuidv4 } = require("uuid");
+const messageHistoryDao = require("./message.history.dao");
 
 class MessageThreadDao {
     // Create a new thread with initial messageCount = 0.
@@ -197,7 +198,7 @@ class MessageThreadDao {
     // (Assumes messageDao.deleteByThreadId is responsible for deleting the actual messages.)
     async deleteThreadAndMessages(threadId) {
         try {
-            const deletedMessages = await messageDao.deleteByThreadId(threadId);
+            const deletedMessages = await messageHistoryDao.deleteByThreadId(threadId);
             if (deletedMessages.status !== "success") {
                 throw new Error("Failed to delete messages for thread");
             }
@@ -229,6 +230,19 @@ class MessageThreadDao {
             return !!thread;
         } catch (error) {
             log.error("DAO Error [isThreadExists]: ", error);
+            throw error;
+        }
+    }
+
+    async renameThreadTitle(threadId, title) {
+        try {
+            return await MessageThread.findOneAndUpdate(
+                { threadId },
+                { $set: { title } },
+                { new: true } // return updated document
+            ).lean();
+        } catch (error) {
+            log.error("Error in renameThreadTitle DAO: ", error);
             throw error;
         }
     }

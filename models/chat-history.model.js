@@ -38,9 +38,14 @@ const chatHistorySchema = new mongoose.Schema(
     }
 );
 
-// Add index on chatId for fast lookup
-chatHistorySchema.index({ userId: 1 });
+// // Add index on chatId for fast lookup
+// chatHistorySchema.index({ userId: 1 });
+// chatHistorySchema.index({ threadId: 1 });
+// chatHistorySchema.index({ userId: 1, threadId: 1 }); // compounding index for future perspective
+
+// Add indexes for fast lookup
+chatHistorySchema.index({ user_id: 1 });
 chatHistorySchema.index({ threadId: 1 });
-chatHistorySchema.index({ userId: 1, threadId: 1 }); // compounding index for future perspective
+chatHistorySchema.index({ user_id: 1, threadId: 1 }); // compound index for future perspective
 
 module.exports = mongoose.model("chat-history", chatHistorySchema);
