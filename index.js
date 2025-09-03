@@ -4,7 +4,7 @@ const cors = require("cors");
 const cookieSession = require("cookie-session");
 const log = require("./configs/logger.config");
 const { PORT, SOCKET_PORT } = require("./configs/server.config");
-const { AuthRouter, userRouter } = require("./routes/index");
+const { AuthRouter, userDemograhicRouter } = require("./routes/index");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./configs/swagger.config");
 
@@ -42,7 +42,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", AuthRouter);
-app.use("/api/user", userRouter);
+app.use("/api/user", userDemograhicRouter);
 
 
 // Swagger docs

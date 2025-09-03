@@ -4,17 +4,27 @@ const options = {
     definition: {
         openapi: "3.0.0",
         info: {
-            title: "Clipverse Auth API",
+            title: "Sakhi APIs Docs",
             version: "1.0.0",
             description: "Mobile-based OTP Login/Signup for Clipverse",
         },
         servers: [
             {
-                url: "http://localhost:4000", // change if needed
+                url: "https://sakhi-ai-apis.onrender.com",
+                description: "Development server",
             },
         ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT",
+                },
+            },
+        },
     },
-    apis: ["./routes/*.js"], // update if your routes are elsewhere
+    apis: ["./routes/*.js"],
 };
 
 const swaggerSpec = swaggerJsDoc(options);

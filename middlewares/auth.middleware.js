@@ -1,5 +1,5 @@
 const { JWT_SECRET } = require("../configs/server.config");
-const userDao = require("../daos/user.dao");
+const userDao = require("../daos/user.demographic.dao");
 const { verifyToken } = require("../utils/helpers/tokenHelper.util");
 const jwt = require("jsonwebtoken");
 class JWT {

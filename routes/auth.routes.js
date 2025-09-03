@@ -1,49 +1,6 @@
 const router = require("express").Router();
 const authController = require("../controllers/auth.controller");
 
-
-/**
- * @swagger
- * /api/auth/request-otp:
- *   post:
- *     summary: Request OTP for login/signup
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - mobile
- *             properties:
- *               mobile:
- *                 type: string
- *                 example: "9876543210"
- *     responses:
- *       200:
- *         description: OTP sent successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 status:
- *                   type: string
- *                 data:
- *                   type: object
- *                   properties:
- *                     userId:
- *                       type: string
- *                     mobile:
- *                       type: string
- *       400:
- *         description: Mobile number missing
- *       500:
- *         description: Internal server error
- */
 router.post("/request-otp", async (req, res) => {
   try {
     const result = await authController.requestOTP(req, res);
@@ -54,60 +11,6 @@ router.post("/request-otp", async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/auth/verify-otp:
- *   post:
- *     summary: Verify OTP and log in user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - mobile
- *               - otp
- *             properties:
- *               mobile:
- *                 type: string
- *                 example: "9876543210"
- *               otp:
- *                 type: string
- *                 example: "1234"
- *     responses:
- *       200:
- *         description: OTP verified and token returned
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 status:
- *                   type: string
- *                 token:
- *                   type: string
- *                 user:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                     mobile:
- *                       type: string
- *                     name:
- *                       type: string
- *                     isVerified:
- *                       type: boolean
- *       400:
- *         description: Missing mobile or OTP
- *       401:
- *         description: Invalid or expired OTP
- *       500:
- *         description: Internal server error
- */
 router.post("/verify-otp", async (req, res) => {
   try {
     const result = await authController.verifyOTP(req, res);
@@ -119,7 +22,10 @@ router.post("/verify-otp", async (req, res) => {
 });
 
 
-//---------------------------------
+
+
+
+//--------------------------------- FOLLOWING CODE WILL REMOVE
 
 router.post("/register", async (req, res) => {
   try {
