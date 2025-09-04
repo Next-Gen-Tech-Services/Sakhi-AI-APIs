@@ -13,6 +13,32 @@ const { v4: uuidv4 } = require("uuid");
 
 const CHAT_BOT_URL = "https://chat-deployment.blackdesert-6a7b405b.centralindia.azurecontainerapps.io/message";
 
+// utiliy function for this service
+
+function getISTDateTime() {
+    const now = new Date();
+
+    // Convert to IST
+    const options = {
+        timeZone: "Asia/Kolkata",
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+    };
+
+    const parts = new Intl.DateTimeFormat("en-IN", options).formatToParts(now);
+
+    const date = `${parts.find(p => p.type === "day").value}-${parts.find(p => p.type === "month").value}-${parts.find(p => p.type === "year").value}`;
+    const time = `${parts.find(p => p.type === "hour").value}-${parts.find(p => p.type === "minute").value}-${parts.find(p => p.type === "second").value}`;
+
+    return `${date} ${time}`;
+}
+
+
 class MessageService {
     async sendMessageService(req, res) {
         try {
@@ -37,14 +63,7 @@ class MessageService {
 
             if (!threadId) {
                 // Format current date/time as dd-mm-yy hh-mm-ss
-                const now = new Date();
-                const formattedDate = `${String(now.getDate()).padStart(2, "0")}-${String(
-                    now.getMonth() + 1
-                ).padStart(2, "0")}-${String(now.getFullYear()).slice(-2)} ${String(
-                    now.getHours()
-                ).padStart(2, "0")}-${String(now.getMinutes()).padStart(2, "0")}-${String(
-                    now.getSeconds()
-                ).padStart(2, "0")}`;
+                const formattedDate = getISTDateTime();
 
                 const threadResp = await messageThreadsDao.createThread({
                     userId,
